@@ -44,13 +44,22 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""36acb483-c8a5-4efe-bbe9-66b03d293dae"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""6c07da76-b951-4488-b090-03db6b4c19e8"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Keyboard>/x"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -112,6 +121,17 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                     ""action"": ""WASD"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""70cadf23-13e6-4f8b-818c-a81be68dbc59"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -122,6 +142,7 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
         m_KeyboardMouse = asset.FindActionMap("KeyboardMouse", throwIfNotFound: true);
         m_KeyboardMouse_FlipWorlds = m_KeyboardMouse.FindAction("FlipWorlds", throwIfNotFound: true);
         m_KeyboardMouse_WASD = m_KeyboardMouse.FindAction("WASD", throwIfNotFound: true);
+        m_KeyboardMouse_Jump = m_KeyboardMouse.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -183,12 +204,14 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
     private IKeyboardMouseActions m_KeyboardMouseActionsCallbackInterface;
     private readonly InputAction m_KeyboardMouse_FlipWorlds;
     private readonly InputAction m_KeyboardMouse_WASD;
+    private readonly InputAction m_KeyboardMouse_Jump;
     public struct KeyboardMouseActions
     {
         private @PlayerControlls m_Wrapper;
         public KeyboardMouseActions(@PlayerControlls wrapper) { m_Wrapper = wrapper; }
         public InputAction @FlipWorlds => m_Wrapper.m_KeyboardMouse_FlipWorlds;
         public InputAction @WASD => m_Wrapper.m_KeyboardMouse_WASD;
+        public InputAction @Jump => m_Wrapper.m_KeyboardMouse_Jump;
         public InputActionMap Get() { return m_Wrapper.m_KeyboardMouse; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -204,6 +227,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @WASD.started -= m_Wrapper.m_KeyboardMouseActionsCallbackInterface.OnWASD;
                 @WASD.performed -= m_Wrapper.m_KeyboardMouseActionsCallbackInterface.OnWASD;
                 @WASD.canceled -= m_Wrapper.m_KeyboardMouseActionsCallbackInterface.OnWASD;
+                @Jump.started -= m_Wrapper.m_KeyboardMouseActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_KeyboardMouseActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_KeyboardMouseActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_KeyboardMouseActionsCallbackInterface = instance;
             if (instance != null)
@@ -214,6 +240,9 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
                 @WASD.started += instance.OnWASD;
                 @WASD.performed += instance.OnWASD;
                 @WASD.canceled += instance.OnWASD;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -222,5 +251,6 @@ public partial class @PlayerControlls : IInputActionCollection2, IDisposable
     {
         void OnFlipWorlds(InputAction.CallbackContext context);
         void OnWASD(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }
